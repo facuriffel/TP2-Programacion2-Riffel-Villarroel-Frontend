@@ -1,0 +1,73 @@
+<div class="auth-container">
+    <mat-card class="auth-card">
+        <mat-card-header>
+            <mat-card-title>Registro de Paciente</mat-card-title>
+            <mat-card-subtitle>Completá tus datos para acceder al sistema</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+            <form [formGroup]="registroForm" (ngSubmit)="onSubmit()">
+                <div class="row">
+                    <mat-form-field appearance="outline" class="col">
+                        <mat-label>Nombre</mat-label>
+                        <input matInput formControlName="nombre" />
+                        <mat-error *ngIf="registroForm.get('nombre')?.invalid">Nombre obligatorio</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="col">
+                        <mat-label>Apellido</mat-label>
+                        <input matInput formControlName="apellido" />
+                        <mat-error *ngIf="registroForm.get('apellido')?.invalid">Apellido obligatorio</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>DNI</mat-label>
+                    <input matInput formControlName="dni" placeholder="Ej. 40123456" />
+                    <mat-error *ngIf="registroForm.get('dni')?.hasError('required')">El DNI es obligatorio</mat-error>
+                    <mat-error *ngIf="registroForm.get('dni')?.hasError('pattern')">Solo dígitos numéricos</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Fecha de Nacimiento</mat-label>
+                    <input matInput type="date" formControlName="fecha_nacimiento" />
+                    <mat-error *ngIf="registroForm.get('fecha_nacimiento')?.invalid">Fecha obligatoria</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Correo Electrónico</mat-label>
+                    <input matInput type="email" formControlName="email" placeholder="correo@ejemplo.com" />
+                    <mat-error *ngIf="registroForm.get('email')?.invalid">Formato de correo no válido</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Contraseña</mat-label>
+                    <input matInput [type]="ocultarPassword ? 'password' : 'text'" formControlName="password" />
+                    <button mat-icon-button matSuffix type="button" (click)="ocultarPassword = !ocultarPassword">
+                        <mat-icon>{{ ocultarPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                    </button>
+                    <mat-error *ngIf="registroForm.get('password')?.invalid">Mínimo 6 caracteres</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Obra Social / Cobertura</mat-label>
+                    <mat-select formControlName="id_cobertura">
+                        <mat-option *ngFor="let cob of coberturas" [value]="cob.id">
+                            {{ cob.nombre }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="registroForm.get('id_cobertura')?.invalid">Seleccioná una cobertura</mat-error>
+                </mat-form-field>
+
+                <button mat-raised-button color="primary" type="submit" class="w-100"
+                    [disabled]="registroForm.invalid || cargando">
+                    {{ cargando ? 'Registrando...' : 'Registrarme' }}
+                </button>
+            </form>
+        </mat-card-content>
+
+        <mat-card-footer class="auth-footer">
+            <p>¿Ya estás registrado? <a routerLink="/login">Iniciá sesión</a></p>
+        </mat-card-footer>
+    </mat-card>
+</div>
