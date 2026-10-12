@@ -1,1 +1,18 @@
-<router-outlet></router-outlet>
+<div class="app-layout">
+  <app-header (toggleMenu)="sidenav.toggle()"></app-header>
+
+  <mat-sidenav-container class="app-sidenav-container" [hasBackdrop]="true">
+    <mat-sidenav #sidenav mode="over" [opened]="false" class="app-sidenav">
+      @if (authService.currentUser()) {
+        <app-sidebar (closeDrawer)="sidenav.close()"></app-sidebar>
+      }
+    </mat-sidenav>
+
+    <mat-sidenav-content class="app-sidenav-content">
+      <main class="main-content">
+        <router-outlet></router-outlet>
+      </main>
+      <app-footer></app-footer>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
