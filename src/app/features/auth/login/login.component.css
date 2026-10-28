@@ -21,3 +21,6 @@
   text-align: center;
   padding: 1rem 0 0;
 }
+.auth-card mat-card-header {
+  margin-bottom: 1.5rem;
+}

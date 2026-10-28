@@ -231,7 +231,7 @@ import { Usuario } from '../../core/models/auth.models';
         width: 68px;
         height: 68px;
         border-radius: 50%;
-        background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+        background: linear-gradient(135deg, #0f172a 0%, #0f172a 100%);
         color: #ffffff;
         display: flex;
         align-items: center;
@@ -265,9 +265,9 @@ import { Usuario } from '../../core/models/auth.models';
         gap: 6px;
         font-size: 0.85rem;
         font-weight: 600;
-        color: #0369a1;
-        background: #e0f2fe;
-        border: 1px solid #bae6fd;
+        color: #0f172a;
+        background: #f1f5f9;
+        border: 1px solid #e2e8f0;
         padding: 6px 14px;
         border-radius: 20px;
       }
@@ -361,7 +361,7 @@ import { Usuario } from '../../core/models/auth.models';
       }
 
       .role-text {
-        color: #0369a1;
+        color: #0f172a;
         font-weight: 600;
       }
 
@@ -437,8 +437,7 @@ export class PerfilComponent implements OnInit {
 
   private resolverNombreCobertura(idCobertura: number): void {
     this.coberturaService.listar().subscribe({
-      next: (res) => {
-        const lista = res.datos?.coberturas || [];
+      next: (lista) => {
         const encontrada = lista.find((c) => c.id === idCobertura);
         if (encontrada) {
           this.coberturaNombre.set(encontrada.nombre);

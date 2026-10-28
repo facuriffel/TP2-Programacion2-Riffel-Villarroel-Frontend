@@ -1,17 +1,10 @@
-import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { environment } from '../../../environments/environment';
-import { ApiResponse, Cobertura } from '../models/auth.models';
+import { Injectable } from '@angular/core';
+import { Cobertura } from '../models/auth.models';
+import { CatalogoApi } from './catalogo-api';
 
-@Injectable({
-    providedIn: 'root'
-})
-export class CoberturaService {
-    private http = inject(HttpClient);
-    private apiUrl = `${environment.apiUrl}/coberturas`;
-
-    listar(): Observable<ApiResponse<{ coberturas: Cobertura[] }>> {
-        return this.http.get<ApiResponse<{ coberturas: Cobertura[] }>>(this.apiUrl);
+@Injectable({ providedIn: 'root' })
+export class CoberturaService extends CatalogoApi<Cobertura> {
+    constructor() {
+        super('coberturas', 'coberturas');
     }
 }

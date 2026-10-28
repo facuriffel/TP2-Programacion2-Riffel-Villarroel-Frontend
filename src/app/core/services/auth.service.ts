@@ -1,9 +1,10 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable, switchMap, tap } from 'rxjs';
+import { Observable, map, switchMap, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApiResponse, Usuario } from '../models/auth.models';
+import { ActualizarPerfilPayload } from '../models/clinica.models';
 
 @Injectable({
     providedIn: 'root'
@@ -50,6 +51,23 @@ export class AuthService {
 
     getPerfil(): Observable<ApiResponse<{ usuario: Usuario }>> {
         return this.http.get<ApiResponse<{ usuario: Usuario }>>(`${this.apiUrl}/perfil`);
+    }
+
+    actualizarPerfil(datos: ActualizarPerfilPayload): Observable<string> {
+        return this.http
+            .put<ApiResponse<{ mensaje: string }>>(`${this.apiUrl}/perfil`, datos)
+            .pipe(
+                map((res) => res.datos.mensaje),
+                switchMap((mensaje) => this.getPerfil().pipe(
+                    tap((perfil) => {
+                        if (perfil.datos?.usuario) {
+                            localStorage.setItem('tp2_usuario', JSON.stringify(perfil.datos.usuario));
+                            this.currentUser.set(perfil.datos.usuario);
+                        }
+                    }),
+                    map(() => mensaje),
+                )),
+            );
     }
 
     logout(): void {

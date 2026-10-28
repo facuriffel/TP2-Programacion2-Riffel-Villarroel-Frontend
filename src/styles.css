@@ -1,1 +1,405 @@
-/* You can add global styles to this file, and also import other style files */
+/* Tokens de diseño: base neutra (slate) y un único acento sobrio */
+html {
+  --app-bg: #f8fafc;
+  --app-surface: #ffffff;
+  --app-border: #e2e8f0;
+  --app-text: #0f172a;
+  --app-muted: #64748b;
+  --app-accent: #0f172a;
+  --app-hover: #f1f5f9;
+  --app-radius: 12px;
+
+  --mat-sys-primary: #0f172a;
+  --mat-sys-on-primary: #ffffff;
+  --mat-sys-primary-container: #e2e8f0;
+  --mat-sys-on-primary-container: #0f172a;
+  --mat-sys-secondary-container: #f1f5f9;
+  --mat-sys-on-secondary-container: #0f172a;
+  --mat-sys-background: #f8fafc;
+  --mat-sys-surface: #ffffff;
+  --mat-sys-surface-container: #ffffff;
+  --mat-sys-surface-container-low: #f8fafc;
+  --mat-sys-surface-container-high: #ffffff;
+  --mat-sys-surface-container-highest: #f1f5f9;
+  --mat-sys-on-surface: #0f172a;
+  --mat-sys-on-surface-variant: #64748b;
+  --mat-sys-outline: #cbd5e1;
+  --mat-sys-outline-variant: #e2e8f0;
+  --mat-sys-corner-extra-small: 8px;
+  --mat-sys-corner-small: 8px;
+  --mat-sys-corner-medium: 12px;
+  --mat-sys-corner-extra-large: 12px;
+}
+
+body {
+  background: var(--app-bg);
+  color: var(--app-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+.snackbar-error {
+  --mat-snack-bar-container-color: #7f1d1d;
+  --mat-snack-bar-supporting-text-color: #ffffff;
+  --mat-snack-bar-button-color: #fecaca;
+}
+
+/* Cabecera de pantalla estandarizada */
+.pagina-admin {
+  padding: 28px 32px 40px;
+  max-width: 1280px;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 auto;
+}
+
+.pagina-admin__cabecera {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.pagina-admin__titulos h1,
+.pagina-admin__cabecera > h1 {
+  margin: 0;
+  font-size: 22px;
+  line-height: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--app-text);
+}
+
+.pagina-admin__bajada {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: var(--app-muted);
+}
+
+.panel-admin {
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+/* Tarjetas */
+.mat-mdc-card {
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius);
+  box-shadow: none;
+}
+
+/* Tablas de alta densidad */
+.tabla-admin {
+  width: 100%;
+  background: transparent;
+}
+
+.tabla-admin .mat-mdc-header-row {
+  height: 40px;
+}
+
+.tabla-admin .mat-mdc-row {
+  height: 46px;
+  transition: background-color 0.12s ease;
+}
+
+.tabla-admin .mat-mdc-row:hover {
+  background: var(--app-bg);
+}
+
+.tabla-admin .mat-mdc-header-cell {
+  background: var(--app-bg);
+  color: var(--app-muted);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.tabla-admin .mat-mdc-cell {
+  font-size: 13px;
+  color: var(--app-text);
+}
+
+.tabla-admin .mat-mdc-cell,
+.tabla-admin .mat-mdc-header-cell {
+  border-bottom: 1px solid var(--app-border);
+}
+
+.tabla-admin .mat-mdc-row:last-child .mat-mdc-cell {
+  border-bottom: none;
+}
+
+.estado-vacio,
+.estado-cargando {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 40px 16px;
+  color: var(--app-muted);
+  font-size: 14px;
+}
+
+.columna-acciones {
+  width: 112px;
+  text-align: right;
+}
+
+/* Botones */
+html body .mat-mdc-unelevated-button,
+html body .mat-mdc-outlined-button,
+html body .mat-mdc-button,
+html body .mat-mdc-raised-button {
+  border-radius: 8px;
+  font-weight: 500;
+  letter-spacing: 0;
+  transition: background-color 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+}
+
+html body .mat-mdc-unelevated-button:not(:disabled) {
+  background: var(--app-accent);
+  color: #ffffff;
+}
+
+html body .mat-mdc-unelevated-button:not(:disabled):hover {
+  background: #1e293b;
+}
+
+html body .mat-mdc-outlined-button:not(:disabled) {
+  border-color: #cbd5e1;
+  color: var(--app-text);
+}
+
+html body .mat-mdc-outlined-button:not(:disabled):hover,
+html body .mat-mdc-button:not(:disabled):hover {
+  background: var(--app-hover);
+}
+
+/* Formularios */
+.mat-mdc-form-field {
+  font-size: 14px;
+}
+
+.mdc-text-field--outlined .mdc-notched-outline__leading,
+.mdc-text-field--outlined .mdc-notched-outline__trailing,
+.mdc-text-field--outlined .mdc-notched-outline__notch {
+  border-color: #cbd5e1;
+}
+
+/* Diálogos */
+.cdk-overlay-dark-backdrop {
+  background: rgba(15, 23, 42, 0.3);
+  backdrop-filter: blur(4px);
+}
+
+.mat-mdc-dialog-container .mdc-dialog__surface {
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+}
+
+.mat-mdc-dialog-title.mdc-dialog__title {
+  margin: 0;
+  padding: 16px 24px 14px;
+  font-size: 16px;
+  font-weight: 600;
+  background: var(--app-bg);
+  border-bottom: 1px solid var(--app-border);
+}
+
+.mat-mdc-dialog-title.mdc-dialog__title::before {
+  display: none;
+}
+
+.mat-mdc-dialog-content.mdc-dialog__content {
+  padding: 20px 24px 8px !important;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+.mat-mdc-dialog-actions {
+  padding: 12px 24px 16px;
+  border-top: 1px solid var(--app-border);
+}
+
+/* Stepper tipo reserva SaaS */
+.mat-stepper-horizontal,
+.mat-stepper-vertical {
+  --mat-stepper-container-color: transparent;
+  --mat-stepper-header-icon-background-color: #e2e8f0;
+  --mat-stepper-header-icon-foreground-color: #475569;
+  --mat-stepper-header-selected-state-icon-background-color: #0f172a;
+  --mat-stepper-header-selected-state-icon-foreground-color: #ffffff;
+  --mat-stepper-header-done-state-icon-background-color: #0f172a;
+  --mat-stepper-header-done-state-icon-foreground-color: #ffffff;
+  --mat-stepper-header-edit-state-icon-background-color: #0f172a;
+  --mat-stepper-header-edit-state-icon-foreground-color: #ffffff;
+  --mat-stepper-line-color: #e2e8f0;
+  --mat-stepper-header-label-text-size: 13px;
+  --mat-stepper-header-label-text-weight: 500;
+  --mat-stepper-header-selected-state-label-text-weight: 600;
+}
+
+.mat-stepper-horizontal .mat-horizontal-stepper-header-container {
+  border-bottom: 1px solid var(--app-border);
+  padding: 4px 0 8px;
+}
+
+.mat-step-header .mat-step-icon {
+  height: 24px;
+  width: 24px;
+  font-size: 12px;
+}
+
+.mat-step-header:hover:not([aria-disabled]) {
+  background: var(--app-hover);
+}
+
+.mat-horizontal-content-container {
+  padding: 8px 4px 16px !important;
+}
+
+/* Badges de estado (acentos suaves sobre base slate) */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 999px;
+  background: #f8fafc;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+  white-space: nowrap;
+}
+
+.badge--ok { background: #ecfdf5; color: #047857; border-color: #a7f3d0; }
+.badge--warn { background: #fffbeb; color: #b45309; border-color: #fde68a; }
+.badge--info { background: #eef2ff; color: #4338ca; border-color: #c7d2fe; }
+.badge--danger { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
+
+/* Animación de entrada */
+@keyframes fadeInSlide {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.pagina-admin,
+.mat-mdc-dialog-container .mdc-dialog__surface {
+  animation: fadeInSlide 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Micro-interacciones */
+.panel-admin,
+.mat-mdc-card,
+html body .mat-mdc-unelevated-button,
+html body .mat-mdc-outlined-button,
+.tabla-admin .mat-mdc-row {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.indicador:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.06);
+}
+
+html body .mat-mdc-unelevated-button:not(:disabled):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pagina-admin,
+  .mat-mdc-dialog-container .mdc-dialog__surface { animation: none; }
+  * { transition-duration: 0.01ms !important; }
+}
+
+/* Responsive: tablas con scroll horizontal y grillas a 1 columna */
+.panel-admin:has(.tabla-admin) { overflow-x: auto; }
+.tabla-admin { min-width: 640px; }
+
+@media (max-width: 768px) {
+  .pagina-admin { padding: 20px 16px 32px; }
+  .pagina-admin__cabecera { flex-direction: column; align-items: stretch; }
+  .resumen,
+  .grilla { grid-template-columns: 1fr !important; }
+}
+
+/* Responsive: contenedor de tablas con scroll horizontal interno */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 768px) {
+  [class*="grid"],
+  [class*="grilla"],
+  [class*="fila"],
+  [class*="resumen"] {
+    grid-template-columns: 1fr !important;
+  }
+  .mat-mdc-card-content,
+  .mat-mdc-card { --mat-card-outlined-container-shape: 12px; }
+  .mat-mdc-card { padding: 12px; }
+  .mat-mdc-card-content { padding: 12px !important; }
+  .mat-horizontal-stepper-wrapper,
+  .mat-stepper-horizontal,
+  .mat-stepper-vertical { padding: 12px; }
+  .mat-horizontal-content-container { padding: 8px 0 12px !important; }
+  .mat-mdc-dialog-container .mdc-dialog__surface { max-width: 100vw; }
+  .mat-mdc-dialog-title.mdc-dialog__title { padding: 12px 16px; }
+  .mat-mdc-dialog-content.mdc-dialog__content { padding: 12px 16px 8px !important; }
+  .mat-mdc-dialog-actions { padding: 12px 16px; flex-wrap: wrap; }
+  .cdk-overlay-pane.mat-mdc-dialog-panel { max-width: 95vw !important; }
+}
+
+/* Contención de desbordamiento horizontal */
+html, body { max-width: 100vw; overflow-x: hidden; }
+.app-container,
+main,
+mat-sidenav-content,
+.mat-sidenav-content {
+  max-width: 100vw;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+.mat-mdc-card,
+form,
+.mat-mdc-form-field,
+.panel-admin,
+.mat-stepper-horizontal,
+.mat-stepper-vertical {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.table-container table { max-width: none; }
+
+/* Botón de mostrar/ocultar contraseña: animación de "guiño" al alternar */
+.btn-toggle-password mat-icon {
+  transition: color 0.2s ease;
+}
+.btn-toggle-password:active mat-icon {
+  transform: scale(0.85);
+}
+.btn-toggle-password mat-icon.icono-ojo--animado {
+  animation: parpadeo-ojo 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes parpadeo-ojo {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  40% {
+    transform: scale(0.65) rotate(-12deg);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}

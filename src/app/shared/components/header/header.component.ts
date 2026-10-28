@@ -5,7 +5,11 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '../../../core/services/auth.service';
+import { NotificationService } from '../../../core/services/notification.service';
 
 @Component({
   selector: 'app-header',
@@ -17,9 +21,12 @@ import { AuthService } from '../../../core/services/auth.service';
     MatButtonModule,
     MatIconModule,
     MatTooltipModule,
+    MatBadgeModule,
+    MatMenuModule,
+    MatProgressSpinnerModule,
   ],
   template: `
-    <mat-toolbar color="primary" class="app-toolbar">
+    <mat-toolbar class="app-toolbar">
       <!-- Lado Izquierdo: Menú lateral (si está autenticado) y Branding -->
       <div class="toolbar-left">
         @if (authService.currentUser()) {
@@ -36,7 +43,7 @@ import { AuthService } from '../../../core/services/auth.service';
         }
 
         <a routerLink="/" class="brand-link" title="Ir al Inicio">
-          <mat-icon class="brand-icon">health_and_safety</mat-icon>
+          <span class="brand-mark"><mat-icon class="brand-icon">health_and_safety</mat-icon></span>
           <span class="brand-name">Clínica Virtual</span>
         </a>
       </div>
@@ -51,12 +58,52 @@ import { AuthService } from '../../../core/services/auth.service';
           <button
             mat-icon-button
             type="button"
-            matTooltip="Semana 3: Próximamente notificaciones"
+            [matMenuTriggerFor]="notifMenu"
+            (menuOpened)="notificaciones.refrescar()"
+            matTooltip="Notificaciones"
             aria-label="Notificaciones del sistema"
             class="icon-action-btn"
           >
-            <mat-icon>notifications</mat-icon>
+            <mat-icon
+              [matBadge]="notificaciones.noLeidas()"
+              [matBadgeHidden]="notificaciones.noLeidas() === 0"
+              matBadgeColor="warn"
+              matBadgeSize="small"
+              aria-hidden="false"
+              >notifications</mat-icon
+            >
           </button>
+
+          <mat-menu #notifMenu="matMenu" xPosition="before" class="notif-menu-panel">
+            <div class="notif-panel" (click)="$event.stopPropagation()">
+              <div class="notif-title">Notificaciones</div>
+              @if (notificaciones.cargando() && notificaciones.notificaciones().length === 0) {
+                <div class="notif-empty"><mat-spinner diameter="24"></mat-spinner></div>
+              } @else if (notificaciones.notificaciones().length === 0) {
+                <div class="notif-empty">No tenés notificaciones.</div>
+              } @else {
+                @for (n of notificaciones.notificaciones(); track n.id) {
+                  <div class="notif-item" [class.unread]="!n.leida">
+                    <div class="notif-body">
+                      <div class="notif-msg">{{ n.mensaje }}</div>
+                      <div class="notif-date">{{ n.fecha | date: 'dd/MM/yyyy HH:mm' }}</div>
+                    </div>
+                    @if (!n.leida) {
+                      <button
+                        mat-icon-button
+                        type="button"
+                        matTooltip="Marcar como leída"
+                        aria-label="Marcar como leída"
+                        (click)="notificaciones.marcarLeida(n.id)"
+                      >
+                        <mat-icon>done</mat-icon>
+                      </button>
+                    }
+                  </div>
+                }
+              }
+            </div>
+          </mat-menu>
 
           <div class="user-info-badge">
             <span class="user-fullname">{{ user.nombre }} {{ user.apellido }}</span>
@@ -90,7 +137,7 @@ import { AuthService } from '../../../core/services/auth.service';
             <span>Ingresar</span>
           </a>
 
-          <a mat-flat-button color="accent" routerLink="/registro" class="auth-btn register-btn">
+          <a mat-flat-button routerLink="/registro" class="auth-btn register-btn">
             <mat-icon>person_add</mat-icon>
             <span>Registrarse</span>
           </a>
@@ -104,178 +151,200 @@ import { AuthService } from '../../../core/services/auth.service';
         position: sticky;
         top: 0;
         z-index: 1000;
+        height: 56px;
+        padding: 0 20px;
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid #e2e8f0;
+        color: #0f172a;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 0 16px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-        background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
-        color: #ffffff;
-        min-height: 64px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow: hidden;
       }
-
-      .toolbar-left {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-
-      .menu-button {
-        color: #ffffff;
-      }
-
-      .brand-link {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        color: #ffffff;
-        text-decoration: none;
-        font-weight: 700;
-        letter-spacing: 0.3px;
-        transition: opacity 0.2s ease;
-      }
-
-      .brand-link:hover {
-        opacity: 0.92;
-      }
-
-      .brand-icon {
-        font-size: 28px;
-        width: 28px;
-        height: 28px;
-        color: #e0f2fe;
-      }
-
-      .brand-name {
-        font-size: 1.2rem;
-        white-space: nowrap;
-      }
-
-      .toolbar-spacer {
-        flex: 1 1 auto;
-      }
-
+      .toolbar-left,
       .toolbar-right {
         display: flex;
         align-items: center;
         gap: 12px;
       }
-
-      .welcome-text {
-        font-size: 0.95rem;
-        color: #f0f9ff;
-        font-weight: 400;
-        margin-right: 8px;
+      .toolbar-left {
+        min-width: 0;
       }
-
-      @media (max-width: 680px) {
-        .welcome-text {
-          display: none;
-        }
-        .brand-name {
-          font-size: 1rem;
-        }
+      .toolbar-right {
+        flex-shrink: 0;
       }
-
-      .auth-btn {
-        color: #ffffff;
-        border-color: rgba(255, 255, 255, 0.4);
-      }
-
-      .auth-btn mat-icon {
-        margin-right: 4px;
-        font-size: 20px;
-        width: 20px;
-        height: 20px;
-      }
-
-      .register-btn {
-        background-color: #ffffff;
-        color: #0369a1 !important;
-        font-weight: 600;
-      }
-
-      .register-btn:hover {
-        background-color: #f0f9ff;
-      }
-
+      .menu-button,
       .icon-action-btn {
+        flex-shrink: 0;
+      }
+      .brand-link {
+        min-width: 0;
+      }
+      .toolbar-spacer {
+        flex: 1 1 auto;
+      }
+      .brand-link {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #0f172a;
+        text-decoration: none;
+      }
+      .brand-mark {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        background: #0f172a;
+      }
+      .brand-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
         color: #ffffff;
       }
-
+      .brand-name {
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        white-space: nowrap;
+      }
+      .welcome-text {
+        font-size: 13px;
+        color: #64748b;
+        margin-right: 4px;
+      }
+      .auth-btn mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+      .bell-icon {
+        color: #475569;
+      }
       .user-info-badge {
         display: flex;
         align-items: center;
-        background: rgba(255, 255, 255, 0.15);
-        border: 1px solid rgba(255, 255, 255, 0.25);
-        border-radius: 24px;
-        padding: 2px 4px 2px 14px;
-        gap: 4px;
+        gap: 2px;
+        padding: 0 4px 0 12px;
+        border: 1px solid #e2e8f0;
+        border-radius: 999px;
+        background: #ffffff;
       }
-
       .user-fullname {
-        font-size: 0.92rem;
+        font-size: 13px;
         font-weight: 500;
-        color: #ffffff;
         white-space: nowrap;
-        max-width: 180px;
+        max-width: 200px;
         overflow: hidden;
         text-overflow: ellipsis;
       }
-
+      .role-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        color: #64748b;
+      }
       @media (max-width: 768px) {
+        .app-toolbar {
+          padding: 0 8px;
+        }
+        .toolbar-left,
+        .toolbar-right {
+          gap: 8px;
+        }
+        .brand-name {
+          font-size: 13px;
+        }
+        .welcome-text {
+          display: none;
+        }
+        .logout-button {
+          min-width: 0;
+          padding: 0 8px;
+        }
+        .logout-button .btn-text,
+        .auth-btn span {
+          display: none;
+        }
+        .logout-button mat-icon,
+        .auth-btn mat-icon {
+          margin: 0;
+        }
+        .auth-btn {
+          min-width: 0;
+          padding: 0 8px;
+        }
+      }
+      @media (max-width: 600px) {
+        .brand-name,
         .user-fullname {
           display: none;
         }
         .user-info-badge {
-          padding: 2px;
-          background: transparent;
-          border: none;
+          padding: 0 4px;
         }
       }
-
-      .role-indicator-btn {
-        color: #e0f2fe;
-        width: 36px;
-        height: 36px;
-        line-height: 36px;
+      ::ng-deep .notif-menu-panel {
+        max-width: min(420px, 95vw) !important;
       }
-
-      .role-icon {
-        font-size: 22px;
-        width: 22px;
-        height: 22px;
+      .notif-panel {
+        width: min(380px, 95vw);
+        max-height: 420px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        box-sizing: border-box;
       }
-
-      .logout-button {
-        color: #ffffff !important;
-        border-color: rgba(255, 255, 255, 0.5) !important;
+      .notif-title {
+        padding: 12px 16px;
+        font-size: 13px;
+        font-weight: 600;
+        border-bottom: 1px solid #e2e8f0;
       }
-
-      .logout-button mat-icon {
-        font-size: 20px;
-        width: 20px;
-        height: 20px;
-        margin-right: 4px;
+      .notif-empty {
+        display: flex;
+        justify-content: center;
+        padding: 24px 16px;
+        font-size: 13px;
+        color: #64748b;
       }
-
-      @media (max-width: 540px) {
-        .logout-button .btn-text {
-          display: none;
-        }
-        .logout-button mat-icon {
-          margin-right: 0;
-        }
-        .logout-button {
-          min-width: 40px;
-          padding: 0 8px;
-        }
+      .notif-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 8px 8px 16px;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 13px;
+        color: #64748b;
+      }
+      .notif-item.unread {
+        background: #f8fafc;
+        border-left: 3px solid #0f172a;
+        color: #0f172a;
+        font-weight: 500;
+      }
+      .notif-body {
+        flex: 1;
+        min-width: 0;
+        overflow-wrap: anywhere;
+      }
+      .notif-date {
+        font-size: 11px;
+        color: #94a3b8;
+        font-weight: 400;
       }
     `,
   ],
 })
 export class HeaderComponent {
   readonly authService = inject(AuthService);
+  readonly notificaciones = inject(NotificationService);
   readonly toggleMenu = output<void>();
 
   onLogout(): void {

@@ -4,6 +4,7 @@ export interface Usuario {
     apellido: string;
     dni: string;
     email: string;
+    telefono?: string | null;
     rol: 'administrador' | 'medico' | 'operador' | 'paciente';
     fecha_nacimiento?: string;
     id_cobertura?: number;
@@ -25,4 +26,12 @@ export interface ApiResponse<T> {
 export interface LoginResponse {
     token: string;
     usuario: Usuario;
+}
+
+export interface Notificacion {
+    id: number;
+    tipo: string;
+    mensaje: string;
+    leida: boolean | number;
+    fecha: string;
 }

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -28,18 +28,34 @@ import { AuthService } from '../../../core/services/auth.service';
     styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
+    alternarPassword(): void {
+        this.ocultarPassword = !this.ocultarPassword;
+        this.animarOjo.set(true);
+        setTimeout(() => this.animarOjo.set(false), 350);
+    }
+
     private fb = inject(FormBuilder);
     private authService = inject(AuthService);
     private router = inject(Router);
     private snackBar = inject(MatSnackBar);
+    private cdr = inject(ChangeDetectorRef);
 
     cargando = false;
     ocultarPassword = true;
+    readonly animarOjo = signal(false);
 
     loginForm = this.fb.group({
         dni: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
         password: ['', [Validators.required]]
     });
+
+    private finalizarCarga(): void {
+        // Se difiere para no mutar el estado durante la verificación de la plantilla (NG0100)
+        setTimeout(() => {
+            this.cargando = false;
+            this.cdr.detectChanges();
+        });
+    }
 
     onSubmit(): void {
         if (this.loginForm.invalid) return;
@@ -52,7 +68,7 @@ export class LoginComponent {
 
         this.authService.login(credenciales).subscribe({
             next: (res) => {
-                this.cargando = false;
+                this.finalizarCarga();
                 const usuario = res.datos?.usuario;
                 this.snackBar.open(`¡Bienvenido/a ${usuario?.nombre || ''}!`, 'Cerrar', { duration: 3000 });
 
@@ -64,7 +80,7 @@ export class LoginComponent {
                 else this.router.navigate(['/paciente']);
             },
             error: (err) => {
-                this.cargando = false;
+                this.finalizarCarga();
                 const mensaje = err.error?.datos?.mensaje || 'Credenciales inválidas. Verificá los datos ingresados.';
                 this.snackBar.open(mensaje, 'Cerrar', { duration: 4000 });
             }

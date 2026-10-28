@@ -1,10 +1,10 @@
 <div class="app-layout">
   <app-header (toggleMenu)="sidenav.toggle()"></app-header>
 
-  <mat-sidenav-container class="app-sidenav-container" [hasBackdrop]="true">
-    <mat-sidenav #sidenav mode="over" [opened]="false" class="app-sidenav">
+  <mat-sidenav-container class="app-sidenav-container" [hasBackdrop]="esMovil()">
+    <mat-sidenav #sidenav [mode]="esMovil() ? 'over' : 'side'" [opened]="authService.currentUser() !== null && !esMovil()" class="app-sidenav">
       @if (authService.currentUser()) {
-        <app-sidebar (closeDrawer)="sidenav.close()"></app-sidebar>
+        <app-sidebar (navegar)="cerrarEnMovil(sidenav)"></app-sidebar>
       }
     </mat-sidenav>
 

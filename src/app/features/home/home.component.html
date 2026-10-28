@@ -1,0 +1,50 @@
+<div class="home">
+  @if (authService.currentUser(); as user) {
+    <section class="hero hero--privado">
+      <span class="tag">{{ obtenerTextoRol(user.rol) }}</span>
+      <h1>Bienvenido/a, {{ user.nombre }} {{ user.apellido }}</h1>
+      <p>Accedé a las funciones de tu perfil desde los accesos directos o el menú lateral.</p>
+    </section>
+
+    <h2 class="seccion">Accesos directos</h2>
+    <div class="grilla-accesos">
+      @for (a of accesos(); track a.ruta; let primero = $first) {
+        <a class="acceso" [class.acceso--ancho]="primero" [routerLink]="a.ruta">
+          <span class="icono" [class]="'icono icono--' + (a.tono ?? 'base')"><mat-icon>{{ a.icono }}</mat-icon></span>
+          <h3>{{ a.titulo }}</h3>
+          <p>{{ a.texto }}</p>
+          <span class="ir">Abrir <mat-icon>arrow_forward</mat-icon></span>
+        </a>
+      }
+    </div>
+  } @else {
+    <section class="hero">
+      <span class="tag"><mat-icon>verified</mat-icon> Clínica Virtual</span>
+      <h1>Atención médica ordenada, desde donde estés</h1>
+      <p>Gestioná tus turnos, consultá profesionales y accedé a tu historial clínico en un solo lugar.</p>
+      <div class="acciones">
+        <a mat-flat-button routerLink="/login" class="cta"><mat-icon>login</mat-icon> Iniciar sesión</a>
+        <a mat-stroked-button routerLink="/registro" class="cta-sec"><mat-icon>person_add</mat-icon> Registrarse como paciente</a>
+      </div>
+    </section>
+
+    <h2 class="seccion">Servicios</h2>
+    <div class="grilla-accesos">
+      @for (s of servicios; track s.titulo; let primero = $first) {
+        <a class="acceso" [class.acceso--ancho]="primero" [routerLink]="s.ruta">
+          <span class="icono" [class]="'icono icono--' + s.tono"><mat-icon>{{ s.icono }}</mat-icon></span>
+          <h3>{{ s.titulo }}</h3>
+          <p>{{ s.texto }}</p>
+        </a>
+      }
+    </div>
+
+    <div class="emergencia">
+      <mat-icon>support_agent</mat-icon>
+      <div>
+        <strong>¿Urgencia médica?</strong>
+        <span>Central de emergencias las 24 hs: 0800-222-2546.</span>
+      </div>
+    </div>
+  }
+</div>

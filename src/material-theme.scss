@@ -13,8 +13,8 @@ html {
         primary: mat.$azure-palette,
         tertiary: mat.$blue-palette,
       ),
-      typography: Roboto,
-      density: 0,
+      typography: Inter,
+      density: -1,
     )
   );
 }

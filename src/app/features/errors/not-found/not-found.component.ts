@@ -127,7 +127,7 @@ import { MatIconModule } from '@angular/material/icon';
       }
 
       .info-icon {
-        color: #0284c7;
+        color: #0f172a;
         font-size: 20px;
         width: 20px;
         height: 20px;
