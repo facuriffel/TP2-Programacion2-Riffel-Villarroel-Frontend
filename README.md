@@ -3,6 +3,8 @@
 
 Aplicación web desarrollada con **Angular 21** y **Angular Material 21**, orientada a la gestión integral hospitalaria, telemedicina, administración de turnos médicos y registros clínicos para la Clínica Virtual.
 
+> ⚠️ **Rama de entrega:** la versión que se entrega y se defiende de este frontend se encuentra en la rama **`entrega-frontend`** del repositorio. Verificar estar parado sobre esa rama (`git checkout entrega-frontend`) antes de instalar dependencias y levantar el proyecto.
+
 ---
 
 ## 🚀 Requisitos del Sistema
@@ -161,20 +163,52 @@ Requisitos: Node.js 22 LTS o 24 y MySQL 8 (o MariaDB 10.6+) en ejecución.
 
 ## 👤 Usuarios de prueba
 
-Cargados por `schema_and_seed.sql`. Todos se ingresan con **DNI y contraseña**.
+Cargados por `schema_and_seed.sql`. Todos se ingresan con **DNI y contraseña** (el email no se usa para loguearse).
 
-| Rol | DNI | Contraseña | Sede | Ruta inicial |
+| Rol | DNI | Email | Contraseña | Notas |
 | :--- | :--- | :--- | :--- | :--- |
-| Administrador | 10000001 | Admin123 | — | `/admin/reportes` |
-| Operador | 30000001 | Operador123 | Sede Central | `/operador/agenda` |
-| Médico 1 (Cardiología y Clínica Médica; **agenda en Sede Central y Sede Norte**) | 20000001 | Medico123 | Sede Central | `/medico/turnos` |
-| Médico 2 (Pediatría) | 20000002 | Medico123 | Sede Norte | `/medico/turnos` |
-| Médico 3 (Dermatología) | 20000003 | Medico123 | Sede Sur | `/medico/turnos` |
-| Paciente 1 (OSDE) | 40000001 | Paciente123 | — | `/paciente/mis-turnos` |
-| Paciente 2 (Swiss Medical) | 40000002 | Paciente123 | — | `/paciente/mis-turnos` |
-| Paciente 3 (PAMI) | 40000003 | Paciente123 | — | `/paciente/mis-turnos` |
+| Administrador | 12312312 | - | admin123 | Acceso total: ABMs, reportes y auditoría |
+| Operador | 40123123 | operador@gmail.com | prueba123 | Gestión de agendas y asignación de turnos en su sede (Sede Central) |
+| Médico | 41123123 | medico@gmail.com | prueba123 | Cardiología y Clínica Médica; **agenda en Sede Central y Sede Norte** |
+| Paciente 1 | 42123123 | - | prueba123 | Reserva y consulta de historial — cobertura OSDE |
+| Paciente 2 | 43123123 | - | prueba123 | Reserva y consulta de historial — cobertura Swiss Medical |
+| Paciente 3 | 44123123 | - | prueba123 | Reserva y consulta de historial — cobertura PAMI |
+
+Además, la semilla incluye dos médicos adicionales para poder probar la gestión multi-sede (agenda y turnos en otras sedes y especialidades):
+
+| Rol | DNI | Email | Contraseña | Sede |
+| :--- | :--- | :--- | :--- | :--- |
+| Médico 2 (Pediatría) | 20000002 | medico2@clinica.test | prueba123 | Sede Norte |
+| Médico 3 (Dermatología) | 20000003 | medico3@clinica.test | prueba123 | Sede Sur |
 
 Datos cargados: 3 sedes, 4 coberturas, 4 especialidades, agendas para hoy, mañana y los próximos días, y 11 turnos (5 confirmados, 3 atendidos con historial clínico y 3 cancelados), además de notificaciones y registros de auditoría de ejemplo.
+
+---
+
+## 🧭 Guía rápida de prueba por rol
+
+Con el backend y el frontend corriendo, ingresar en `http://localhost:4200/login` con el DNI y contraseña de cada rol de la tabla anterior.
+
+- **Administrador** (`12312312` / `admin123`)
+  - `Dashboard` (`/admin/reportes`): indicadores generales y gráficos con Chart.js (turnos por estado, por sede, por especialidad), con filtro de fechas.
+  - `Usuarios` (`/admin/usuarios`): alta, edición y baja de operadores, médicos y pacientes, con asignación de sede y especialidades.
+  - `Sedes`, `Especialidades`, `Coberturas` (`/admin/sedes`, `/admin/especialidades`, `/admin/coberturas`): ABM de catálogos base del sistema.
+  - `Auditoría` (`/admin/auditoria`): log de solo lectura de todas las acciones de alta/modificación/baja registradas por el sistema, con filtros por usuario, entidad y fecha.
+
+- **Operador** (`40123123` / `prueba123`, Sede Central)
+  - `Agenda` (`/operador/agenda`): asignación de franjas horarias a los médicos de su sede.
+  - `Turnos` (`/operador/turnos`) y `Asignar turno` (`/operador/asignar-turno`): reserva de turnos para pacientes existentes o nuevos, filtrando por sede, especialidad y médico.
+  - `Pacientes` (`/operador/pacientes`): búsqueda y alta de pacientes.
+
+- **Médico** (`41123123` / `prueba123`, Cardiología/Clínica Médica — para probar multi-sede también están el Médico 2 `20000002` y el Médico 3 `20000003`, ambos con contraseña `prueba123`)
+  - `Mi Agenda` (`/medico/agenda`): publicación de las franjas horarias en las que atiende.
+  - `Turnos Programados` (`/medico/turnos`): listado de turnos a atender; al atender uno se completa diagnóstico y tratamiento, lo que genera un registro de historial clínico.
+  - `Historial Clínico` (`/medico/historial`): consulta del historial de los pacientes atendidos.
+
+- **Paciente** (por ejemplo `42123123` / `prueba123`)
+  - `Nuevo turno` (`/paciente/nuevo-turno`): alta de un turno eligiendo sede, especialidad, médico, fecha y horario disponible.
+  - `Mis turnos` (`/paciente/mis-turnos`): listado de turnos propios (próximos, atendidos y cancelados), con la ficha de historial clínico embebida en los turnos ya atendidos.
+  - `Mis datos` (`/paciente/datos`): edición de email, teléfono, cobertura y contraseña.
 
 ---
 
