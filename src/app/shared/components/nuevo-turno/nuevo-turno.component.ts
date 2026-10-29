@@ -381,6 +381,13 @@ export class NuevoTurnoComponent {
     this.horarios.set([]);
   }
 
+  private filtrarHorariosPasados(horarios: string[]): string[] {
+    if (aIsoFecha(this.fecha()) !== aIsoFecha(hoy())) return horarios;
+    const ahora = new Date();
+    const horaActual = `${String(ahora.getHours()).padStart(2, '0')}:${String(ahora.getMinutes()).padStart(2, '0')}`;
+    return horarios.filter((h) => h > horaActual);
+  }
+
   private cargarHorarios(): void {
     this.limpiarHorario();
     const fecha = aIsoFecha(this.fecha());
@@ -397,7 +404,7 @@ export class NuevoTurnoComponent {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (horarios) => {
-          this.horarios.set(horarios);
+          this.horarios.set(this.filtrarHorariosPasados(horarios));
           this.cargandoHorarios.set(false);
         },
         error: (err) => {
